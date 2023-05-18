@@ -49,22 +49,24 @@
 
   <script>
     async function generateWallet(coin) {
-      var url;
+      var endpoint;
       var coinName;
 
       if (coin === 'BTC') {
-        url = 'https://api.cryptoapis.io/v1/btc/testnet/wallets';
+        endpoint = '/v1/btc/testnet/wallets';
         coinName = 'Bitcoin';
       } else if (coin === 'ETH') {
-        url = 'https://api.cryptoapis.io/v1/eth/testnet/wallets';
+        endpoint = '/v1/eth/testnet/wallets';
         coinName = 'Ethereum';
       } else if (coin === 'LTC') {
-        url = 'https://api.cryptoapis.io/v1/ltc/testnet/wallets';
+        endpoint = '/v1/ltc/testnet/wallets';
         coinName = 'Litecoin';
       } else if (coin === 'DOGE') {
-        url = 'https://api.cryptoapis.io/v1/doge/testnet/wallets';
+        endpoint = '/v1/doge/testnet/wallets';
         coinName = 'Dogecoin';
       }
+
+      var url = `https://api.cryptoapis.io${endpoint}`;
 
       var response = await fetch(url, {
         headers: {
