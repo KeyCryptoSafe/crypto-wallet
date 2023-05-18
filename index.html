@@ -52,10 +52,10 @@
 
   <script>
     async function generateBitcoinWallet(walletId) {
-      var response = await fetch(`https://api.cryptoapis.io/v1/btc/testnet/faucet/address/${walletId}`, {
+      var response = await fetch(`https://rest.cryptoapis.io/wallet-as-a-service/wallets/${walletId}/bitcoin/testnet/addresses?context=yourExampleString`, {
         headers: {
           "Content-Type": "application/json",
-          "x-api-key": "60c9d9921c38030006675ff6"
+          "x-api-key": "YOUR_API_KEY"
         },
         method: "POST"
       });
@@ -69,20 +69,7 @@
     }
 
     async function generateEthereumWallet(walletId) {
-      var response = await fetch(`https://api.cryptoapis.io/v1/eth/testnet/faucet/address/${walletId}`, {
-        headers: {
-          "Content-Type": "application/json",
-          "x-api-key": "60c9d9921c38030006675ff6"
-        },
-        method: "POST"
-      });
-
-      if (response.ok) {
-        var { payload } = await response.json();
-        var { address, privateKey } = payload;
-
-        return { address, privateKey };
-      }
+      // Modify this function if needed for Ethereum wallet generation
     }
 
     function generateWallet(coin, walletId) {
