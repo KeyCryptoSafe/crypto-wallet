@@ -47,48 +47,34 @@
 <body>
   <div id="walletsContainer"></div>
 
-  <script src="https://cdn.jsdelivr.net/npm/bitcoinjs-lib@5.2.0/dist/bitcoinjs-lib.min.js"></script>
-  <script src="https://cdn.ethers.io/lib/ethers-5.4.5.min.js"></script>
-
   <script>
-    async function generateBitcoinWallet(walletId) {
-      var response = await fetch(`https://rest.cryptoapis.io/wallet-as-a-service/wallets/${walletId}/bitcoin/testnet/addresses?context=yourExampleString`, {
+    async function generateDepositAddress() {
+      var url = 'https://rest.cryptoapis.io/wallet-as-a-service/wallets/60c9d9921c38030006675ff6/bitcoin/testnet/addresses?context=yourExampleString';
+
+      var response = await fetch(url, {
         headers: {
           "Content-Type": "application/json",
-          "x-api-key": "YOUR_API_KEY"
+          "x-api-key": "60c9d9921c38030006675ff6"
         },
         method: "POST"
       });
 
       if (response.ok) {
         var { payload } = await response.json();
-        var { address, privateKey } = payload;
+        var address = payload.address;
 
-        return { address, privateKey };
+        return address;
       }
     }
 
-    async function generateEthereumWallet(walletId) {
-      // Modify this function if needed for Ethereum wallet generation
-    }
+    function generateWallet() {
+      var address = generateDepositAddress();
 
-    function generateWallet(coin, walletId) {
-      var wallet;
-
-      if (coin === "BTC") {
-        wallet = generateBitcoinWallet(walletId);
-      } else if (coin === "ETH") {
-        wallet = generateEthereumWallet(walletId);
-      }
-
-      if (wallet) {
-        wallet.then(function(wallet) {
-          var { address, privateKey } = wallet;
-
+      if (address) {
+        address.then(function(address) {
           var cardContent = `
-            <h3>${coin} Wallet</h3>
-            <p><strong>Address:</strong> ${address}</p>
-            <p><strong>Private Key:</strong> ${privateKey}</p>
+            <h3>Bitcoin Testnet Wallet</h3>
+            <p><strong>Deposit Address:</strong> ${address}</p>
           `;
 
           var card = document.createElement("div");
@@ -100,23 +86,9 @@
       }
     }
 
-    function createWalletCards() {
-      var coins = ["BTC", "ETH", "LTC", "DOGE"];
-      var walletId = "60c9d9921c38030006675ff6"; // Replace with your wallet ID
-
-      coins.forEach(function(coin) {
-        var card = document.createElement("div");
-        card.className = "card";
-        card.innerHTML = `<h3>${coin} Wallet</h3>
-                          <button onclick="generateWallet('${coin}', '${walletId}')">Generate Wallet</button>`;
-
-        document.getElementById("walletsContainer").appendChild(card);
-      });
-    }
-
     // Wait for the DOM to load
     document.addEventListener("DOMContentLoaded", function() {
-      createWalletCards();
+      generateWallet();
     });
   </script>
 </body>
