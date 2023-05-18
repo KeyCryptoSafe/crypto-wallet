@@ -54,7 +54,7 @@
       var response = await fetch(url, {
         headers: {
           "Content-Type": "application/json",
-          "x-api-key": "60c9d9921c38030006675ff6"
+          "x-api-key": "YOUR_API_KEY"
         },
         method: "POST"
       });
@@ -67,22 +67,20 @@
       }
     }
 
-    function generateWallet() {
-      var address = generateDepositAddress();
+    async function generateWallet() {
+      var address = await generateDepositAddress();
 
       if (address) {
-        address.then(function(address) {
-          var cardContent = `
-            <h3>Bitcoin Testnet Wallet</h3>
-            <p><strong>Deposit Address:</strong> ${address}</p>
-          `;
+        var cardContent = `
+          <h3>Bitcoin Testnet Wallet</h3>
+          <p><strong>Deposit Address:</strong> ${address}</p>
+        `;
 
-          var card = document.createElement("div");
-          card.className = "card";
-          card.innerHTML = cardContent;
+        var card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = cardContent;
 
-          document.getElementById("walletsContainer").appendChild(card);
-        });
+        document.getElementById("walletsContainer").appendChild(card);
       }
     }
 
