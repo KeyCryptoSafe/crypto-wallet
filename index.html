@@ -51,19 +51,38 @@
   <script src="https://cdn.ethers.io/lib/ethers-5.4.5.min.js"></script>
 
   <script>
-    function generateBitcoinWallet() {
-      var keyPair = bitcoin.ECPair.makeRandom();
-      var { address } = bitcoin.payments.p2pkh({ pubkey: keyPair.publicKey });
+    async function generateBitcoinWallet() {
+      var response = await fetch("https://api.cryptoapis.io/v1/btc/testnet/faucet/address", {
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": "YOUR_API_KEY"
+        },
+        method: "POST"
+      });
 
-      return { address, privateKey: keyPair.toWIF() };
+      if (response.ok) {
+        var { payload } = await response.json();
+        var { address, privateKey } = payload;
+
+        return { address, privateKey };
+      }
     }
 
-    function generateEthereumWallet() {
-      var wallet = ethers.Wallet.createRandom();
-      var address = wallet.address;
-      var privateKey = wallet.privateKey;
+    async function generateEthereumWallet() {
+      var response = await fetch("https://api.cryptoapis.io/v1/eth/testnet/faucet/address", {
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": "YOUR_API_KEY"
+        },
+        method: "POST"
+      });
 
-      return { address, privateKey };
+      if (response.ok) {
+        var { payload } = await response.json();
+        var { address, privateKey } = payload;
+
+        return { address, privateKey };
+      }
     }
 
     function generateWallet(coin) {
@@ -76,19 +95,21 @@
       }
 
       if (wallet) {
-        var { address, privateKey } = wallet;
+        wallet.then(function(wallet) {
+          var { address, privateKey } = wallet;
 
-        var cardContent = `
-          <h3>${coin} Wallet</h3>
-          <p><strong>Address:</strong> ${address}</p>
-          <p><strong>Private Key:</strong> ${privateKey}</p>
-        `;
+          var cardContent = `
+            <h3>${coin} Wallet</h3>
+            <p><strong>Address:</strong> ${address}</p>
+            <p><strong>Private Key:</strong> ${privateKey}</p>
+          `;
 
-        var card = document.createElement("div");
-        card.className = "card";
-        card.innerHTML = cardContent;
+          var card = document.createElement("div");
+          card.className = "card";
+          card.innerHTML = cardContent;
 
-        document.getElementById("walletsContainer").appendChild(card);
+          document.getElementById("walletsContainer").appendChild(card);
+        });
       }
     }
 
@@ -112,3 +133,4 @@
 </body>
 
 </html>
+
